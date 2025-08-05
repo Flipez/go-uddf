@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uddf version="3.2.3" xmlns="https://www.streit.cc/resources/UDDF/v3.2.3/de/index.html">
+  <diver>
+    <owner id="owner1">
+      <personal>
+        <firstname>John</firstname>
+        <lastname>Doe</lastname>
+      </personal>
+    </owner>
+  </diver>
+  
+  <gasdefinitions>
+    <mix id="invalid">
+      <name>Invalid Gas</name>
+      <o2>1.5</o2>
+      <n2>0.5</n2>
+    </mix>
+  </gasdefinitions>
+
+  <profiledata>
+    <repetitiongroup id="rg1">
+      <dive id="dive1">
+        <informationbeforedive>
+          <datetime>2024-01-15T10:00:00Z</datetime>
+        </informationbeforedive>
+        <informationafterdive>
+          <diveduration>3600</diveduration>
+          <greatestdepth>30.5</greatestdepth>
+        </informationafterdive>
+        <tankdata id="tank1">
+          <tankpressurebegin>200</tankpressurebegin>
+          <tankpressureend>50</tankpressureend>
+        </tankdata>
+      </dive>
+    </repetitiongroup>
+  </profiledata>
+
+  <tablegeneration>
+  </tablegeneration>
+</uddf>
