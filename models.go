@@ -1,19 +1,19 @@
 package uddf
 
 type UDDF struct {
-	Version             string               `xml:"version,attr"`
-	Business            *Business            `xml:"business,omitempty"`
-	DecoModel           *DecoModel           `xml:"decomodel,omitempty"`
-	DiveComputerControl *DiveComputerControl `xml:"divecomputercontrol,omitempty"`
-	Diver               Diver                `xml:"diver"`
-	DiveSite            *DiveSite            `xml:"divesite,omitempty"`
-	DiveTrip            *DiveTrip            `xml:"divetrip,omitempty"`
+	Version             string               `xml:"version,attr" validate:"required"`
+	Business            *Business            `xml:"business,omitempty" validate:"omitempty"`
+	DecoModel           *DecoModel           `xml:"decomodel,omitempty" validate:"omitempty"`
+	DiveComputerControl *DiveComputerControl `xml:"divecomputercontrol,omitempty" validate:"omitempty"`
+	Diver               Diver                `xml:"diver" validate:"required"`
+	DiveSite            *DiveSite            `xml:"divesite,omitempty" validate:"omitempty"`
+	DiveTrip            *DiveTrip            `xml:"divetrip,omitempty" validate:"omitempty"`
 	GasDefinitions      *GasDefinitions      `xml:"gasdefinitions,omitempty" validate:"omitempty"`
-	Generator           *Generator           `xml:"generator,omitempty"`
-	Maker               *Maker               `xml:"maker,omitempty"`
-	MediaData           *MediaData           `xml:"mediadata,omitempty"`
+	Generator           *Generator           `xml:"generator,omitempty" validate:"omitempty"`
+	Maker               *Maker               `xml:"maker,omitempty" validate:"omitempty"`
+	MediaData           *MediaData           `xml:"mediadata,omitempty" validate:"omitempty"`
 	ProfileData         ProfileData          `xml:"profiledata" validate:"required"`
-	TableGeneration     TableGeneration      `xml:"tablegeneration"`
+	TableGeneration     TableGeneration      `xml:"tablegeneration" validate:"required"`
 }
 
 type DecoModel struct {
@@ -23,33 +23,33 @@ type DecoModel struct {
 }
 
 type VPM struct {
-	ID           string   `xml:"id,attr"`
-	Conservatism *float64 `xml:"conservatism,omitempty"` // value of the respective Varying Permeability Model (VPM) parameter is set as a percentage. 42% == 0.42
-	Gamma        *float64 `xml:"gamma,omitempty"`        // is the skin tension of bubble nuclei. units used for gamma are kg/s2
-	GC           *float64 `xml:"gc,omitempty"`           // is the nuclear crushing tension. units used for gc are kg/s2
-	Lambda       *float64 `xml:"lambda,omitempty"`       // denotes a summary of several magnitudes. units used for lambda are kg/m/s (7180 fsw*min = 367431.06061 kg/m/s)
-	R0           *float64 `xml:"r0,omitempty"`           // minimum bubble radius excitable into growth. units used for r0 are metre
-	Tissues      []Tissue `xml:"tissue"`                 // At least one <tissue/> element must appear inside the respective parent element
+	ID           string   `xml:"id,attr" validate:"required"`
+	Conservatism *float64 `xml:"conservatism,omitempty" validate:"omitempty,min=0,max=1"` // value of the respective Varying Permeability Model (VPM) parameter is set as a percentage. 42% == 0.42
+	Gamma        *float64 `xml:"gamma,omitempty" validate:"omitempty"`                    // is the skin tension of bubble nuclei. units used for gamma are kg/s2
+	GC           *float64 `xml:"gc,omitempty" validate:"omitempty"`                       // is the nuclear crushing tension. units used for gc are kg/s2
+	Lambda       *float64 `xml:"lambda,omitempty" validate:"omitempty"`                   // denotes a summary of several magnitudes. units used for lambda are kg/m/s (7180 fsw*min = 367431.06061 kg/m/s)
+	R0           *float64 `xml:"r0,omitempty" validate:"omitempty"`                       // minimum bubble radius excitable into growth. units used for r0 are metre
+	Tissues      []Tissue `xml:"tissue" validate:"required,min=1"`                        // At least one <tissue/> element must appear inside the respective parent element
 }
 
 type RGBM struct {
-	ID      string   `xml:"id,attr"`
-	Tissues []Tissue `xml:"tissue"` // At least one <tissue/> element must appear inside the respective parent element
+	ID      string   `xml:"id,attr" validate:"required"`
+	Tissues []Tissue `xml:"tissue" validate:"required,min=1"` // At least one <tissue/> element must appear inside the respective parent element
 }
 
 type Buehlmann struct {
-	ID                 string   `xml:"id,attr"`
-	GradientFactorHigh *float64 `xml:"gradientfactorhigh,omitempty"` // "Gradient Factor High" (GF High), given as a real number 0.0 <= GF Low <= GF High <= 1.0.
-	GradientFactorLow  *float64 `xml:"gradientfactorlow,omitempty"`  // "Gradient Factor Low" (GF Low), given as a real number 0.0 <= GF Low <= GF High <= 1.0.
-	Tissues            []Tissue `xml:"tissue"`                       //  At least one <tissue/> element must appear inside the respective parent element
+	ID                 string   `xml:"id,attr" validate:"required"`
+	GradientFactorHigh *float64 `xml:"gradientfactorhigh,omitempty" validate:"omitempty,min=0,max=1,gtefield=GradientFactorLow"` // "Gradient Factor High" (GF High), given as a real number 0.0 <= GF Low <= GF High <= 1.0.
+	GradientFactorLow  *float64 `xml:"gradientfactorlow,omitempty" validate:"omitempty,min=0,max=1,ltefield=GradientFactorHigh"` // "Gradient Factor Low" (GF Low), given as a real number 0.0 <= GF Low <= GF High <= 1.0.
+	Tissues            []Tissue `xml:"tissue" validate:"required,min=1"`                                                         // At least one <tissue/> element must appear inside the respective parent element
 }
 
 type Tissue struct {
-	Gas      string  `xml:"gas,attr"`      // h2 | he | n2
-	HalfLife float64 `xml:"halflife,attr"` // halflife of the tissue, given in seconds as a real number
-	Number   int     `xml:"number,attr"`   // number of tissue, given as an integer
-	A        float64 `xml:"a,attr"`        // A value for the Buehlmann algorithm
-	B        float64 `xml:"b,attr"`        // B value for the Buehlmann algorithm
+	Gas      string  `xml:"gas,attr" validate:"required,oneof=h2 he n2"` // h2 | he | n2
+	HalfLife float64 `xml:"halflife,attr" validate:"required,min=0"`     // halflife of the tissue, given in seconds as a real number
+	Number   int     `xml:"number,attr" validate:"required"`             // number of tissue, given as an integer
+	A        float64 `xml:"a,attr" validate:"required"`                  // A value for the Buehlmann algorithm
+	B        float64 `xml:"b,attr" validate:"required"`                  // B value for the Buehlmann algorithm
 }
 
 type GasDefinitions struct {
@@ -57,18 +57,18 @@ type GasDefinitions struct {
 }
 
 type Mix struct {
-	ID                    string   `xml:"id,attr"`
-	AliasName             *string  `xml:"aliasname"`
-	Ar                    *float64 `xml:"ar,omitempty" validate:"omitempty,min=0,max=1"` // argon fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
-	EquivalentAirDepth    *float64 `xml:"equivalentairdepth,omitempty"`                  // equivalent air depth of a gas, given as a real number in meters
-	H2                    *float64 `xml:"h2,omitempty" validate:"omitempty,min=0,max=1"` // hydrogen fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
-	He                    *float64 `xml:"he,omitempty" validate:"omitempty,min=0,max=1"` // helium fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
-	MaximumOperationDepth *float64 `xml:"maximumoperationdepth,omitempty"`               // maximum operation depth of a gas, given as a real number in meters
-	MaximumPo2            *float64 `xml:"maximumpo2,omitempty"`                          // threshold for the oxygen partial pressure, when the oxygen fraction of this breathing gas starts to be poisonous
-	N2                    *float64 `xml:"n2,omitempty" validate:"omitempty,min=0,max=1"` // nitrogen fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
+	ID                    string   `xml:"id,attr" validate:"required"`
+	AliasName             *string  `xml:"aliasname" validate:"omitempty"`
+	Ar                    *float64 `xml:"ar,omitempty" validate:"omitempty,min=0,max=1"`        // argon fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
+	EquivalentAirDepth    *float64 `xml:"equivalentairdepth,omitempty" validate:"omitempty"`    // equivalent air depth of a gas, given as a real number in meters
+	H2                    *float64 `xml:"h2,omitempty" validate:"omitempty,min=0,max=1"`        // hydrogen fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
+	He                    *float64 `xml:"he,omitempty" validate:"omitempty,min=0,max=1"`        // helium fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
+	MaximumOperationDepth *float64 `xml:"maximumoperationdepth,omitempty" validate:"omitempty"` // maximum operation depth of a gas, given as a real number in meters
+	MaximumPo2            *float64 `xml:"maximumpo2,omitempty" validate:"omitempty"`            // threshold for the oxygen partial pressure, when the oxygen fraction of this breathing gas starts to be poisonous
+	N2                    *float64 `xml:"n2,omitempty" validate:"omitempty,min=0,max=1"`        // nitrogen fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
 	Name                  string   `xml:"name" validate:"required"`
 	O2                    *float64 `xml:"o2,omitempty" validate:"omitempty,min=0,max=1"` // oxygen fraction of a (breathing) gas, given as a real number less or equal 1.0 in percent
-	PricePerLitre         *Price   `xml:"priceperlitre,omitempty"`
+	PricePerLitre         *Price   `xml:"priceperlitre,omitempty" validate:"omitempty"`
 }
 
 type ProfileData struct {
