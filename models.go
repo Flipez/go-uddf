@@ -452,7 +452,7 @@ type Maker struct {
 }
 
 type Generator struct {
-	AliasName *string `xml:"aliasname"`
+	AliasName *string `xml:"aliasname,omitempty"`
 	DateTime  *Time   `xml:"datetime,omitempty"`
 	Links     []Link  `xml:"link"`
 	Name      string  `xml:"name"`
@@ -466,7 +466,7 @@ type DiveTrip struct {
 
 type Trip struct {
 	ID        string     `xml:"id,attr"`
-	AliasName *string    `xml:"aliasname"`
+	AliasName *string    `xml:"aliasname,omitempty"`
 	Name      string     `xml:"name"`
 	Ratings   []Rating   `xml:"rating"`
 	TripParts []TripPart `xml:"trippart"`
@@ -534,7 +534,7 @@ type DiveSite struct {
 
 type Site struct {
 	ID          string     `xml:"id,attr"`
-	AliasName   *string    `xml:"aliasname"`
+	AliasName   *string    `xml:"aliasname,omitempty"`
 	Ecology     *Ecology   `xml:"ecology,omitempty"`
 	Environment *string    `xml:"environment,omitempty"` // Allowed keywords are: unknown, ocean-sea, lake-quarry, river-spring, cave-cavern, pool, hyperbaric-chamber, under-ice, other.
 	Geography   *Geography `xml:"geography,omitempty"`
