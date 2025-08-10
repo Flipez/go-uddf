@@ -1,4 +1,4 @@
-module github.com/flipez/go-uddf
+module github.com/Flipez/go-uddf
 
 go 1.24.5
 
