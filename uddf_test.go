@@ -1,7 +1,9 @@
 package uddf
 
 import (
+	"encoding/xml"
 	"testing"
+	"time"
 )
 
 func TestValidate(t *testing.T) {
@@ -100,4 +102,48 @@ func TestParseFile(t *testing.T) {
 			t.Error("expected error for non-existent file, got nil")
 		}
 	})
+}
+
+func TestTimeUnmarshalXML(t *testing.T) {
+	tests := []struct {
+		name     string
+		xmlData  string
+		expected time.Time
+	}{
+		{
+			name:     "year only",
+			xmlData:  "<date>1917</date>",
+			expected: time.Date(1917, 1, 1, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:     "timestamp without seconds",
+			xmlData:  "<date>1919-06-21T13:05</date>",
+			expected: time.Date(1919, 6, 21, 13, 5, 0, 0, time.UTC),
+		},
+		{
+			name:     "full ISO 8601",
+			xmlData:  "<date>2023-06-21T13:05:30Z</date>",
+			expected: time.Date(2023, 6, 21, 13, 5, 30, 0, time.UTC),
+		},
+		{
+			name:     "date only",
+			xmlData:  "<date>2023-06-21</date>",
+			expected: time.Date(2023, 6, 21, 0, 0, 0, 0, time.UTC),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var customTime Time
+			err := xml.Unmarshal([]byte(tt.xmlData), &customTime)
+			if err != nil {
+				t.Fatalf("failed to unmarshal XML: %v", err)
+			}
+
+			actual := time.Time(customTime)
+			if !actual.Equal(tt.expected) {
+				t.Errorf("expected %v, got %v", tt.expected, actual)
+			}
+		})
+	}
 }
