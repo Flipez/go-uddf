@@ -147,3 +147,27 @@ func TestTimeUnmarshalXML(t *testing.T) {
 		})
 	}
 }
+
+func TestDateOfTripXML(t *testing.T) {
+	xmlData := `<dateoftrip startdate="2003-04-12" enddate="2003-04-19"/>`
+	
+	var dateOfTrip DateOfTrip
+	err := xml.Unmarshal([]byte(xmlData), &dateOfTrip)
+	if err != nil {
+		t.Fatalf("failed to unmarshal XML: %v", err)
+	}
+
+	expectedStart := time.Date(2003, 4, 12, 0, 0, 0, 0, time.UTC)
+	expectedEnd := time.Date(2003, 4, 19, 0, 0, 0, 0, time.UTC)
+
+	actualStart := time.Time(dateOfTrip.StartDate)
+	actualEnd := time.Time(dateOfTrip.EndDate)
+
+	if !actualStart.Equal(expectedStart) {
+		t.Errorf("expected start date %v, got %v", expectedStart, actualStart)
+	}
+
+	if !actualEnd.Equal(expectedEnd) {
+		t.Errorf("expected end date %v, got %v", expectedEnd, actualEnd)
+	}
+}

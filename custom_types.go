@@ -37,12 +37,7 @@ func (f *FlexibleFloat) UnmarshalXML(d *xml.Decoder, start xml.StartElement) err
 
 type Time time.Time
 
-func (t *Time) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
-	var dateStr string
-	if err := d.DecodeElement(&dateStr, &start); err != nil {
-		return err
-	}
-
+func (t *Time) parseTimeString(dateStr string) error {
 	// Trim any whitespace
 	dateStr = strings.TrimSpace(dateStr)
 
@@ -71,4 +66,16 @@ func (t *Time) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
 	*t = Time(parsedTime)
 	return nil
+}
+
+func (t *Time) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	var dateStr string
+	if err := d.DecodeElement(&dateStr, &start); err != nil {
+		return err
+	}
+	return t.parseTimeString(dateStr)
+}
+
+func (t *Time) UnmarshalXMLAttr(attr xml.Attr) error {
+	return t.parseTimeString(attr.Value)
 }
