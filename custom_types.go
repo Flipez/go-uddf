@@ -51,6 +51,8 @@ func (t *Time) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		time.RFC3339,           // 2006-01-02T15:04:05Z07:00
 		"2006-01-02",           // YYYY-MM-DD
 		"2006-01-02T15:04:05Z", // ISO 8601 UTC
+		"2006-01-02T15:04",     // YYYY-MM-DDTHH:MM (without seconds)
+		"2006",                 // YYYY (year only)
 	}
 
 	var parsedTime time.Time
