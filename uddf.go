@@ -38,8 +38,3 @@ func (u *UDDF) Validate() error {
 	validate := validator.New()
 	return validate.Struct(u)
 }
-
-// Convenience accessors
-//func (u *UDDF) GetDives() []Dive
-//func (u *UDDF) GetDiveSites() []Site
-//func (u *UDDF) GetMixes() []Mix
