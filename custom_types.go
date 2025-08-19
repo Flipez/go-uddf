@@ -46,6 +46,7 @@ func (t *Time) parseTimeString(dateStr string) error {
 		time.RFC3339,           // 2006-01-02T15:04:05Z07:00
 		"2006-01-02",           // YYYY-MM-DD
 		"2006-01-02T15:04:05Z", // ISO 8601 UTC
+		"2006-01-02T15:04:05",  // ISO 8601 UTC without timezone
 		"2006-01-02T15:04",     // YYYY-MM-DDTHH:MM (without seconds)
 		"2006",                 // YYYY (year only)
 	}
